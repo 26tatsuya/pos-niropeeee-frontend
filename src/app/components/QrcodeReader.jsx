@@ -10,10 +10,7 @@ const qrcodeRegionId = 'html5qr-code-full-region';
  
 export default function QrcodeReader({
   onScanSuccess,
-  onScanFailure,
-}: {
-  onScanSuccess: any;
-  onScanFailure: any;
+  onScanFailure
 }) {
   // QRコードリーダーの設定
   // fpsは読み取り頻度。デフォルトは　2.１秒間に何回読み取るかの値を設定。１ならば１秒間に１回読み取る。
