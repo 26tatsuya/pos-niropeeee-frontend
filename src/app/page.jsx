@@ -39,7 +39,7 @@ const Home = () => {
 
   const handleCheck = async () => {
     try {
-      const res = await fetch(`http://127.0.0.1:8000/get-products?code=${scannedResult}`);
+      const res = await fetch(`https://tech0-gen-7-step4-studentwebapp-pos-34-dwgygndxcgeqb8b4.eastus-01.azurewebsites.net/get-products?code=${scannedResult}`);
       if (!res.ok) {
         throw new Error('Network response was not ok');
       }
