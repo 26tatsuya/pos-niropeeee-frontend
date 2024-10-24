@@ -4,10 +4,6 @@
 import { useEffect, useState } from 'react';
 import QrcodeReader from './QrcodeReader';
 
-interface QrcodeReaderComponentProps {
-  onScan: (result: string) => void;
-}
-
 export default function QrcodeReaderComponent({ onScan }: QrcodeReaderComponentProps) {
   const [scannedTime, setScannedTime] = useState(new Date());
   const [scannedResult, setScannedResult] = useState('');
