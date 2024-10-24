@@ -13,8 +13,6 @@ export default function QrcodeReader({
   onScanFailure
 }) {
   // QRコードリーダーの設定
-  // fpsは読み取り頻度。デフォルトは　2.１秒間に何回読み取るかの値を設定。１ならば１秒間に１回読み取る。
-  // qrboxは読み取り範囲の設定。widthとheightを設定する。
   const config = { fps: 1, qrbox: { width: 250, height: 250 } };
  
   // カメラの許可
@@ -24,10 +22,10 @@ export default function QrcodeReader({
   const [selectedCameraId, setSelectedCameraId] = useState('');
  
   // 使用できるカメラ一覧
-  const [cameras, setCameras] = useState<any>([]);
+  const [cameras, setCameras] = useState([]);
  
   // QRコードリーダーインスタンス
-  const [html5QrcodeScanner, setHtml5QrcodeScanner] = useState<any>(null);
+  const [html5QrcodeScanner, setHtml5QrcodeScanner] = useState(null);
  
   // カメラ情報を取得するための関数
   const getCameras = async () => {
@@ -50,14 +48,17 @@ export default function QrcodeReader({
  
   // スキャン開始
   const startScan = async () => {
+    if (!html5QrcodeScanner) {
+      console.error('Scanner is not initialized');
+      return;
+    }
     try {
       await html5QrcodeScanner.start(
         selectedCameraId,
         config,
         onScanSuccess,
-        onScanFailure,
+        onScanFailure
       );
-      setHtml5QrcodeScanner(html5QrcodeScanner);
     } catch (error) {
       console.error('Error starting the scanner: ', error);
     }
@@ -65,24 +66,27 @@ export default function QrcodeReader({
  
   // スキャン停止
   const stopScan = async () => {
+    if (!html5QrcodeScanner) {
+      console.error('Scanner is not initialized');
+      return;
+    }
     console.log('stop scan');
     try {
       await html5QrcodeScanner.stop();
-      setHtml5QrcodeScanner(html5QrcodeScanner);
     } catch (error) {
       console.error('Error stopping the scanner: ', error);
     }
   };
  
   // カメラ切り替え
-  const switchCamera = (targetId: string) => {
+  const switchCamera = (targetId) => {
     console.log(targetId);
     setSelectedCameraId(targetId);
   };
  
   useEffect(() => {
     if (!onScanSuccess && !onScanFailure) {
-      throw 'required callback.';
+      throw new Error('required callback.');
     }
  
     const scanner = new Html5Qrcode(qrcodeRegionId);
@@ -91,7 +95,7 @@ export default function QrcodeReader({
     return () => {
       scanner.clear();
     };
-  }, []);
+  }, [onScanSuccess, onScanFailure]);
  
   return (
     <div className='container mx-auto'>
@@ -102,10 +106,10 @@ export default function QrcodeReader({
             name='camera'
             options={cameras}
             value={cameras.find(
-              (camera: any) => camera.value === selectedCameraId,
+              (camera) => camera.value === selectedCameraId
             )}
             placeholder='カメラを選択'
-            onChange={async (camera) => await switchCamera(camera.value)}
+            onChange={(camera) => switchCamera(camera.value)}
           />
         ) : (
           <p>カメラがありません</p>
@@ -121,7 +125,7 @@ export default function QrcodeReader({
         <button
           className='bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-1 px-2 rounded mr-2'
           onClick={async () => await startScan()}
-          disabled={!cameraPermission && selectedCameraId == ''}
+          disabled={!cameraPermission && selectedCameraId === ''}
         >
           スキャン開始
         </button>
