@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import QrcodeReader from './QrcodeReader';
 
-export default function QrcodeReaderComponent({ onScan }: QrcodeReaderComponentProps) {
+export default function QrcodeReaderComponent({ onScan }) {
   const [scannedTime, setScannedTime] = useState(new Date());
   const [scannedResult, setScannedResult] = useState('');
 
@@ -13,7 +13,7 @@ export default function QrcodeReaderComponent({ onScan }: QrcodeReaderComponentP
   }, [scannedResult, onScan]);
 
   // QRコードを読み取った時の実行する関数
-  const onNewScanResult = (result: any) => {
+  const onNewScanResult = (result) => {
     console.log('QRコードスキャン結果');
     console.log(result);
     setScannedTime(new Date());
@@ -24,8 +24,8 @@ export default function QrcodeReaderComponent({ onScan }: QrcodeReaderComponentP
     <>
       <QrcodeReader
         onScanSuccess={onNewScanResult}
-        onScanFailure={(error: any) => {
-          // console.log('Qr scan error');
+        onScanFailure={(error) => {
+          console.error('QR scan error', error);
         }}
       />
       <div>
