@@ -44,6 +44,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
+import { Html } from "next/document";
 
 export default function Home() {
   const [barcode, setBarcode] = useState("");
@@ -70,7 +71,14 @@ export default function Home() {
             {
               fps: 10,
               qrbox: 250,
-              formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128],
+              formatsToSupport: [
+                Html5QrcodeSupportedFormats.CODE_128,
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.UPC_E,
+                Html5QrcodeSupportedFormats.CODE_39,
+              ],
             },
             (decodedText) => {
               setBarcode(decodedText);
@@ -102,9 +110,9 @@ export default function Home() {
     }
   };
 
-  const fetchProductDetails = async () => {
+  const fetchProductDetails = async (scannedBarcode) => {
     try {
-      const response = await fetch(`https://tech0-gen-7-step4-studentwebapp-pos-34-dwgygndxcgeqb8b4.eastus-01.azurewebsites.net/get-products?code=${scannedResult}`);
+      const response = await fetch(`https://tech0-gen-7-step4-studentwebapp-pos-34-dwgygndxcgeqb8b4.eastus-01.azurewebsites.net/get-products/${scannedBarcode}`);
       const data = await response.json();
       if (data) {
         setProduct(data);
