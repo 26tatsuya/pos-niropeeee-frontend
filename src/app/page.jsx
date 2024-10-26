@@ -44,7 +44,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
-import { Html } from "next/document";
 
 export default function Home() {
   const [barcode, setBarcode] = useState("");
